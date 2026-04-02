@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Skills 全景指南</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --pink: #FF6B8A;
+    --pink-light: #FFE0E6;
+    --purple: #8B5CF6;
+    --purple-light: #EDE9FE;
+    --blue: #3B82F6;
+    --blue-light: #DBEAFE;
+    --green: #10B981;
+    --green-light: #D1FAE5;
+    --orange: #F59E0B;
+    --orange-light: #FEF3C7;
+    --red: #EF4444;
+    --red-light: #FEE2E2;
+    --cyan: #06B6D4;
+    --cyan-light: #CFFAFE;
+    --bg: #FFF5F7;
+    --card-bg: #FFFFFF;
+    --text: #1F2937;
+    --text-light: #6B7280;
+    --shadow: 0 2px 16px rgba(255,107,138,0.10);
+    --shadow-hover: 0 8px 30px rgba(255,107,138,0.18);
+    --radius: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ═══════ HEADER ═══════ */
+  .hero {
+    background: linear-gradient(135deg, #FF6B8A 0%, #8B5CF6 50%, #3B82F6 100%);
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: shimmer 8s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(5%, 5%); }
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: white;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 .octopus { font-size: 2.6rem; }
+  .hero p {
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+    margin-top: 12px;
+    position: relative;
+    z-index: 1;
+    font-weight: 300;
+  }
+  .hero .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 24px;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+  }
+  .hero .stat {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    padding: 8px 20px;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* ═══════ NAV ═══════ */
+  .nav {
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .nav-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+    gap: 4px;
+    padding: 10px 0;
+    scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: none;
+    background: var(--pink-light);
+    color: var(--pink);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    background: var(--pink);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  /* ═══════ CONTAINER ═══════ */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  /* ═══════ INSTALL SECTION ═══════ */
+  .install-card {
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    color: white;
+    margin-bottom: 28px;
+  }
+  .install-card h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .install-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .install-step {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .install-step .num {
+    background: rgba(255,255,255,0.3);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+  .install-step code {
+    word-break: break-all;
+  }
+
+  /* ═══════ PERSONA SECTION ═══════ */
+  .persona-section {
+    margin-bottom: 28px;
+  }
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 10px;
+  }
+  .persona-chip {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .persona-chip:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+  .persona-chip .emoji { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+  .persona-chip .name { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+
+  /* ═══════ SECTION TITLE ═══════ */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 32px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--pink-light);
+  }
+  .section-title .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .section-title h2 { font-size: 1.15rem; font-weight: 700; }
+  .section-title .count {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    background: var(--pink-light);
+    padding: 3px 10px;
+    border-radius: 50px;
+  }
+
+  /* ═══════ SKILL CARD ═══════ */
+  .skill-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    transition: all 0.25s;
+    border-left: 4px solid transparent;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+  .skill-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+  .skill-card.must-have { border-left-color: var(--pink); }
+  .skill-card.dev { border-left-color: var(--blue); }
+  .skill-card.security { border-left-color: var(--red); }
+  .skill-card.research { border-left-color: var(--purple); }
+  .skill-card.marketing { border-left-color: var(--orange); }
+  .skill-card.game { border-left-color: var(--green); }
+  .skill-card.writing { border-left-color: var(--cyan); }
+  .skill-card.business { border-left-color: #EC4899; }
+  .skill-card.design { border-left-color: #F472B6; }
+  .skill-card.hooks { border-left-color: #6366F1; }
+  .skill-card.mcp { border-left-color: #14B8A6; }
+
+  .skill-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .skill-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+  }
+  .skill-stars {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--orange);
+    background: var(--orange-light);
+    padding: 3px 10px;
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+  .skill-desc {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-weight: 500;
+  }
+  .tag-persona { background: var(--pink-light); color: var(--pink); }
+  .tag-category { background: var(--blue-light); color: var(--blue); }
+
+  /* ═══════ ROADMAP ═══════ */
+  .roadmap {
+    background: linear-gradient(135deg, #FECDD3 0%, #E0E7FF 50%, #CFFAFE 100%);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin: 32px 0;
+  }
+  .roadmap h2 { font-size: 1.2rem; font-weight: 700; text-align: center; margin-bottom: 20px; }
+  .roadmap-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .roadmap-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    position: relative;
+  }
+  .roadmap-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 17px;
+    top: 42px;
+    width: 2px;
+    height: calc(100% - 28px);
+    background: rgba(139,92,246,0.3);
+  }
+  .step-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--purple);
+    box-shadow: 0 2px 8px rgba(139,92,246,0.2);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .step-text { font-size: 0.92rem; font-weight: 500; padding-top: 6px; }
+  .step-text small { display: block; font-weight: 300; color: var(--text-light); font-size: 0.8rem; margin-top: 2px; }
+
+  /* ═══════ FOOTER ═══════ */
+  .footer {
+    text-align: center;
+    padding: 40px 16px 32px;
+    color: var(--text-light);
+    font-size: 0.82rem;
+  }
+  .footer a { color: var(--pink); text-decoration: none; }
+
+  /* ═══════ CATEGORY FILTER ═══════ */
+  .category-section { display: none; }
+  .category-section.active { display: block; }
+
+  /* ═══════ RESPONSIVE ═══════ */
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 1.6rem; }
+    .persona-grid { grid-template-columns: repeat(3, 1fr); }
+    .install-step { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <h1><span class="octopus">🐙</span> Claude Code Skills 全景指南</h1>
+  <p>一站式搭建你的 AI 编程工作站 · Skills 百科全书</p>
+  <div class="stats-bar">
+    <span class="stat">📦 100+ Skills</span>
+    <span class="stat">⭐ 500k+ Stars</span>
+    <span class="stat">🔄 2026.04 更新</span>
+  </div>
+</div>
+
+<!-- ═══════ NAV ═══════ -->
+<div class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showAll()">全部</button>
+    <button class="nav-btn" onclick="showCategory('must-have')">🌟 必备</button>
+    <button class="nav-btn" onclick="showCategory('dev')">🧑‍💻 开发</button>
+    <button class="nav-btn" onclick="showCategory('security')">🔐 安全</button>
+    <button class="nav-btn" onclick="showCategory('research')">🔬 研究</button>
+    <button class="nav-btn" onclick="showCategory('marketing')">📈 营销</button>
+    <button class="nav-btn" onclick="showCategory('game')">🎮 游戏</button>
+    <button class="nav-btn" onclick="showCategory('writing')">✍️ 写作</button>
+    <button class="nav-btn" onclick="showCategory('business')">💼 商务</button>
+    <button class="nav-btn" onclick="showCategory('design')">🎨 设计</button>
+    <button class="nav-btn" onclick="showCategory('mcp')">🔌 MCP</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ═══════ INSTALL ═══════ -->
+  <div class="install-card">
+    <h2>🚀 3 步安装 Claude Code</h2>
+    <div class="install-steps">
+      <div class="install-step">
+        <span class="num">1</span>
+        <code>npm install -g @anthropic-ai/claude-code</code>
+      </div>
+      <div class="install-step">
+        <span class="num">2</span>
+        <code>claude &nbsp;&nbsp;# 首次启动会引导登录</code>
+      </div>
+      <div class="install-step">
+        <span class="num">3</span>
+        <code>cp skill.md ~/.claude/commands/ &nbsp;# 安装 Skills</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ PERSONA ═══════ -->
+  <div class="persona-section">
+    <div class="persona-grid">
+      <div class="persona-chip"><span class="emoji">🌟</span><span class="name">装机必备</span></div>
+      <div class="persona-chip"><span class="emoji">🧑‍💻</span><span class="name">全栈开发</span></div>
+      <div class="persona-chip"><span class="emoji">🔐</span><span class="name">安全专家</span></div>
+      <div class="persona-chip"><span class="emoji">🔬</span><span class="name">研究员</span></div>
+      <div class="persona-chip"><span class="emoji">📈</span><span class="name">营销/SEO</span></div>
+      <div class="persona-chip"><span class="emoji">🎮</span><span class="name">游戏开发</span></div>
+      <div class="persona-chip"><span class="emoji">✍️</span><span class="name">内容创作</span></div>
+      <div class="persona-chip"><span class="emoji">💼</span><span class="name">产品商务</span></div>
+      <div class="persona-chip"><span class="emoji">🎨</span><span class="name">设计师</span></div>
+      <div class="persona-chip"><span class="emoji">🍎</span><span class="name">Apple开发</span></div>
+      <div class="persona-chip"><span class="emoji">🐍</span><span class="name">Python</span></div>
+      <div class="persona-chip"><span class="emoji">🌐</span><span class="name">中文用户</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════ MUST-HAVE ═══════ -->
+  <div class="category-section active" data-cat="must-have">
+    <div class="section-title">
+      <div class="icon" style="background:var(--pink-light)">🌟</div>
+      <h2>装机必备 · 人人该装</h2>
+      <span class="count">7 个</span>
+    </div>
+
+    <a class="skill-card must-have" href="https://github.com/affaan-m/everything-claude-code" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">everything-claude-code</span>
+        <span class="skill-stars">⭐ 133k</span>
+      </div>
+      <div class="skill-desc">最全面的 CC 框架。Skills、记忆系统、安全策略、多 Agent 编排，整个生态的「操作系统」。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">框架</span>
+      </div>
+    </a>
+
+    <a class="skill-card must-have" href="https://github.com/garrytan/gstack" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">gstack</span>
+        <span class="skill-stars">⭐ 62k</span>
+      </div>
+      <div class="skill-desc">YC CEO Garry Tan 的完整配置。23 个 Agent 角色（CEO、设计师、QA…），开箱即用。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-persona">💼 商务</span>
+        <span class="tag tag-category">配置</span>
+      </div>
+    </a>
+
+    <a class="skill-card must-have" href="https://github.com/sickn33/antigravity-awesome-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">antigravity-awesome-skills</span>
+        <span class="skill-stars">⭐ 30k</span>
+      </div>
+      <div class="skill-desc">1340+ 可安装 Skills，自带 CLI 安装器。npx antigravity install 一条命令搞定。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-category">安装器</span>
+      </div>
+    </a>
+
+    <a class="skill-card must-have" href="https://github.com/OthmanAdi/planning-with-files" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">planning-with-files</span>
+        <span class="skill-stars">⭐ 18k</span>
+      </div>
+      <div class="skill-desc">Manus 风格持久化规划系统。用文件管理项目规划，思考过程可追溯、可编辑。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">规划</span>
+      </div>
+    </a>
+
+    <a class="skill-card must-have" href="https://github.com/blader/humanizer" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">humanizer</span>
+        <span class="skill-stars">⭐ 12k</span>
+      </div>
+      <div class="skill-desc">去除 AI 写作痕迹，让文本更自然。任何输出文本的场景都能用。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-persona">✍️ 写作</span>
+        <span class="tag tag-category">文本处理</span>
+      </div>
+    </a>
+
+    <a class="skill-card must-have" href="https://github.com/nidhinjs/prompt-master" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">prompt-master</span>
+        <span class="skill-stars">⭐ 4.4k</span>
+      </div>
+      <div class="skill-desc">为任何 AI 工具生成精准提示词，带上下文和记忆保持。提高 AI 交互效率的元技能。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-category">提示工程</span>
+      </div>
+    </a>
+
+    <a class="skill-card must-have" href="https://github.com/zebbern/claude-code-guide" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">claude-code-guide</span>
+        <span class="skill-stars">⭐ 3.8k</span>
+      </div>
+      <div class="skill-desc">从入门到精通完整指南。新手的第一站，覆盖命令、工作流、Agent、Skills。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-category">教程</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ DEV ═══════ -->
+  <div class="category-section active" data-cat="dev">
+    <div class="section-title">
+      <div class="icon" style="background:var(--blue-light)">🧑‍💻</div>
+      <h2>开发者工具箱</h2>
+      <span class="count">12 个</span>
+    </div>
+
+    <a class="skill-card dev" href="https://github.com/Lum1104/Understand-Anything" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">Understand-Anything</span>
+        <span class="skill-stars">⭐ 7.6k</span>
+      </div>
+      <div class="skill-desc">将代码库转为交互式知识图谱。接手新项目的救星。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">代码理解</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/Jeffallan/claude-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">claude-skills (Jeffallan)</span>
+        <span class="skill-stars">⭐ 7.6k</span>
+      </div>
+      <div class="skill-desc">66 个精选全栈 Skills，覆盖前后端、数据库、测试。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">全栈</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/refly-ai/refly" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">refly</span>
+        <span class="skill-stars">⭐ 7.2k</span>
+      </div>
+      <div class="skill-desc">首个开源 Skill 构建器。用 vibe workflow 定义 Skills。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">构建器</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/ChrisWiles/claude-code-showcase" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">claude-code-showcase</span>
+        <span class="skill-stars">⭐ 5.7k</span>
+      </div>
+      <div class="skill-desc">完整参考配置：Hooks + Skills + Agent + GitHub Actions。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">参考配置</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/SawyerHood/dev-browser" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">dev-browser</span>
+        <span class="skill-stars">⭐ 5.3k</span>
+      </div>
+      <div class="skill-desc">让 Agent 自主使用浏览器。调试前端、爬数据、E2E 测试。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">浏览器</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/parcadei/Continuous-Claude-v3" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">Continuous-Claude-v3</span>
+        <span class="skill-stars">⭐ 3.7k</span>
+      </div>
+      <div class="skill-desc">解决长会话上下文丢失。Hooks + 账本 + 交接机制。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">上下文管理</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/lackeyjb/playwright-skill" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">playwright-skill</span>
+        <span class="skill-stars">⭐ 2.3k</span>
+      </div>
+      <div class="skill-desc">Playwright 浏览器自动化。Claude 自主编写并执行测试。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">测试自动化</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/glitternetwork/pinme" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">pinme</span>
+        <span class="skill-stars">⭐ 3.1k</span>
+      </div>
+      <div class="skill-desc">一条命令部署前端项目。简单粗暴，效率拉满。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">部署</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/Aaronontheweb/dotnet-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">dotnet-skills</span>
+        <span class="skill-stars">⭐ 714</span>
+      </div>
+      <div class="skill-desc">.NET 生态专属 Skills 和子 Agent。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">.NET</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/CharlesWiltgen/Axiom" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">Axiom</span>
+        <span class="skill-stars">⭐ 698</span>
+      </div>
+      <div class="skill-desc">iOS / watchOS / tvOS 战斗级 Skills。Apple 平台必备。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🍎 Apple</span>
+        <span class="tag tag-category">iOS</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/NeoLabHQ/context-engineering-kit" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">context-engineering-kit</span>
+        <span class="skill-stars">⭐ 746</span>
+      </div>
+      <div class="skill-desc">提高 Agent 输出质量的上下文工程工具包。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">质量</span>
+      </div>
+    </a>
+
+    <a class="skill-card dev" href="https://github.com/laraben/laravel-claude-code-setup" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">laravel-claude-code-setup</span>
+        <span class="skill-stars">⭐ 281</span>
+      </div>
+      <div class="skill-desc">Laravel 一键配置，PHP 开发者的专属入口。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">Laravel</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ SECURITY ═══════ -->
+  <div class="category-section active" data-cat="security">
+    <div class="section-title">
+      <div class="icon" style="background:var(--red-light)">🔐</div>
+      <h2>安全攻防</h2>
+      <span class="count">5 个</span>
+    </div>
+
+    <a class="skill-card security" href="https://github.com/trailofbits/skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">skills (Trail of Bits)</span>
+        <span class="skill-stars">⭐ 4.2k</span>
+      </div>
+      <div class="skill-desc">知名安全公司出品。安全研究、漏洞检测、审计工作流。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔐 安全</span>
+        <span class="tag tag-category">审计</span>
+      </div>
+    </a>
+
+    <a class="skill-card security" href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">Cybersecurity-Skills</span>
+        <span class="skill-stars">⭐ 4k</span>
+      </div>
+      <div class="skill-desc">753+ 网安 Skills，完整映射 MITRE ATT&CK。渗透、DFIR、威胁情报。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔐 安全</span>
+        <span class="tag tag-category">网络安全</span>
+      </div>
+    </a>
+
+    <a class="skill-card security" href="https://github.com/SimoneAvogadro/android-reverse-engineering-skill" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">android-reverse-engineering</span>
+        <span class="skill-stars">⭐ 1.4k</span>
+      </div>
+      <div class="skill-desc">Android 应用逆向工程。移动安全研究利器。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔐 安全</span>
+        <span class="tag tag-category">逆向</span>
+      </div>
+    </a>
+
+    <a class="skill-card security" href="https://github.com/BrownFineSecurity/iothackbot" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">iothackbot</span>
+        <span class="skill-stars">⭐ 717</span>
+      </div>
+      <div class="skill-desc">IoT 混合渗透测试工具集。物联网安全前沿。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔐 安全</span>
+        <span class="tag tag-category">IoT</span>
+      </div>
+    </a>
+
+    <a class="skill-card security" href="https://github.com/efij/secure-claude-code" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">secure-claude-code</span>
+        <span class="skill-stars">⭐ 100</span>
+      </div>
+      <div class="skill-desc">YARA 风格安全防护：防密钥泄露、数据外泄、提示注入。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔐 安全</span>
+        <span class="tag tag-category">防护</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ RESEARCH ═══════ -->
+  <div class="category-section active" data-cat="research">
+    <div class="section-title">
+      <div class="icon" style="background:var(--purple-light)">🔬</div>
+      <h2>科研 & 知识管理</h2>
+      <span class="count">9 个</span>
+    </div>
+
+    <a class="skill-card research" href="https://github.com/teng-lin/notebooklm-py" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">notebooklm-py</span>
+        <span class="skill-stars">⭐ 8.8k</span>
+      </div>
+      <div class="skill-desc">Google NotebookLM 非官方 Python API。研究者的利器。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-persona">🐍 Python</span>
+        <span class="tag tag-category">知识库</span>
+      </div>
+    </a>
+
+    <a class="skill-card research" href="https://github.com/Orchestra-Research/AI-Research-SKILLs" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">AI-Research-Skills</span>
+        <span class="skill-stars">⭐ 6k</span>
+      </div>
+      <div class="skill-desc">开源 AI 研究 Skills 库。论文阅读、实验设计、结果分析。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-category">AI 研究</span>
+      </div>
+    </a>
+
+    <a class="skill-card research" href="https://github.com/PleasePrompto/notebooklm-skill" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">notebooklm-skill</span>
+        <span class="skill-stars">⭐ 5.4k</span>
+      </div>
+      <div class="skill-desc">CC 直连 NotebookLM，回答带引用出处。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-category">知识库</span>
+      </div>
+    </a>
+
+    <a class="skill-card research" href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">ARIS (自动化研究)</span>
+        <span class="skill-stars">⭐ 5.3k</span>
+      </div>
+      <div class="skill-desc">睡觉时让 AI 自动做研究！跨模型审查、实验自动化。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-category">自动化</span>
+      </div>
+    </a>
+
+    <a class="skill-card research" href="https://github.com/zarazhangrui/codebase-to-course" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">codebase-to-course</span>
+        <span class="skill-stars">⭐ 2.9k</span>
+      </div>
+      <div class="skill-desc">把代码库变成交互式 HTML 课程。教育者必看。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-persona">✍️ 写作</span>
+        <span class="tag tag-category">教育</span>
+      </div>
+    </a>
+
+    <a class="skill-card research" href="https://github.com/DrCatHicks/learning-opportunities" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">learning-opportunities</span>
+        <span class="skill-stars">⭐ 736</span>
+      </div>
+      <div class="skill-desc">AI 辅助编程中的刻意练习。不只让 AI 写，还要学。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-category">自我提升</span>
+      </div>
+    </a>
+
+    <a class="skill-card research" href="https://github.com/joeseesun/anything-to-notebooklm" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">anything-to-notebooklm</span>
+        <span class="skill-stars">⭐ 654</span>
+      </div>
+      <div class="skill-desc">微信/网页/YouTube/PDF → NotebookLM。中文友好。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-persona">🌐 中文</span>
+        <span class="tag tag-category">内容导入</span>
+      </div>
+    </a>
+
+    <a class="skill-card research" href="https://github.com/coleam00/second-brain-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">second-brain-skills</span>
+        <span class="skill-stars">⭐ 603</span>
+      </div>
+      <div class="skill-desc">把 CC 变成你的第二大脑。PKM 爱好者必看。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-category">知识管理</span>
+      </div>
+    </a>
+
+    <a class="skill-card research" href="https://github.com/RoundTable02/tutor-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">tutor-skills</span>
+        <span class="skill-stars">⭐ 555</span>
+      </div>
+      <div class="skill-desc">PDF/代码库 → Obsidian 学习笔记。学生效率工具。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-category">学习笔记</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ MARKETING ═══════ -->
+  <div class="category-section active" data-cat="marketing">
+    <div class="section-title">
+      <div class="icon" style="background:var(--orange-light)">📈</div>
+      <h2>营销 & SEO</h2>
+      <span class="count">5 个</span>
+    </div>
+
+    <a class="skill-card marketing" href="https://github.com/coreyhaines31/marketingskills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">marketingskills</span>
+        <span class="skill-stars">⭐ 18k</span>
+      </div>
+      <div class="skill-desc">营销界的「everything-claude-code」。CRO、文案、SEO、分析全覆盖。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">📈 营销</span>
+        <span class="tag tag-category">全栈营销</span>
+      </div>
+    </a>
+
+    <a class="skill-card marketing" href="https://github.com/zubair-trabzada/geo-seo-claude" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">geo-seo-claude</span>
+        <span class="skill-stars">⭐ 4.7k</span>
+      </div>
+      <div class="skill-desc">GEO 优先 SEO：AI 搜索优化、可引用度评分、PDF 报告。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">📈 营销</span>
+        <span class="tag tag-category">GEO/SEO</span>
+      </div>
+    </a>
+
+    <a class="skill-card marketing" href="https://github.com/AgriciDaniel/claude-seo" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">claude-seo</span>
+        <span class="skill-stars">⭐ 3.8k</span>
+      </div>
+      <div class="skill-desc">19 子 Skill + 12 子 Agent 的全能 SEO 系统。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">📈 营销</span>
+        <span class="tag tag-category">SEO</span>
+      </div>
+    </a>
+
+    <a class="skill-card marketing" href="https://github.com/aaron-he-zhu/seo-geo-claude-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">seo-geo-claude-skills</span>
+        <span class="skill-stars">⭐ 821</span>
+      </div>
+      <div class="skill-desc">20 个 SEO & GEO Skills：关键词研究、内容写作、审计。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">📈 营销</span>
+        <span class="tag tag-category">SEO/GEO</span>
+      </div>
+    </a>
+
+    <a class="skill-card marketing" href="https://github.com/onvoyage-ai/gtm-engineer-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">gtm-engineer-skills</span>
+        <span class="skill-stars">⭐ 589</span>
+      </div>
+      <div class="skill-desc">AEO/GEO 优化：品牌可见度、竞品对标。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">📈 营销</span>
+        <span class="tag tag-category">GTM</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ GAME ═══════ -->
+  <div class="category-section active" data-cat="game">
+    <div class="section-title">
+      <div class="icon" style="background:var(--green-light)">🎮</div>
+      <h2>游戏开发</h2>
+      <span class="count">2 个</span>
+    </div>
+
+    <a class="skill-card game" href="https://github.com/Donchitos/Claude-Code-Game-Studios" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">Claude-Code-Game-Studios</span>
+        <span class="skill-stars">⭐ 7.9k</span>
+      </div>
+      <div class="skill-desc">完整 AI 游戏工作室：48 Agent + 36 工作流。从策划到 QA 全覆盖。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🎮 游戏</span>
+        <span class="tag tag-category">工作室</span>
+      </div>
+    </a>
+
+    <a class="skill-card game" href="https://github.com/htdt/godogen" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">godogen</span>
+        <span class="skill-stars">⭐ 2.5k</span>
+      </div>
+      <div class="skill-desc">输入描述，输出完整 Godot 4 项目。独立游戏效率革命。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🎮 游戏</span>
+        <span class="tag tag-category">Godot</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ WRITING ═══════ -->
+  <div class="category-section active" data-cat="writing">
+    <div class="section-title">
+      <div class="icon" style="background:var(--cyan-light)">✍️</div>
+      <h2>写作 & 内容创作</h2>
+      <span class="count">6 个</span>
+    </div>
+
+    <a class="skill-card writing" href="https://github.com/blader/humanizer" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">humanizer</span>
+        <span class="skill-stars">⭐ 12k</span>
+      </div>
+      <div class="skill-desc">去除 AI 写作痕迹的标杆工具。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">✍️ 写作</span>
+        <span class="tag tag-category">文本优化</span>
+      </div>
+    </a>
+
+    <a class="skill-card writing" href="https://github.com/op7418/Humanizer-zh" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">Humanizer-zh</span>
+        <span class="skill-stars">⭐ 5.4k</span>
+      </div>
+      <div class="skill-desc">Humanizer 中文版。中文写作者必备。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">✍️ 写作</span>
+        <span class="tag tag-persona">🌐 中文</span>
+        <span class="tag tag-category">文本优化</span>
+      </div>
+    </a>
+
+    <a class="skill-card writing" href="https://github.com/Ceeon/videocut-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">videocut-skills</span>
+        <span class="skill-stars">⭐ 1.3k</span>
+      </div>
+      <div class="skill-desc">视频剪辑 Agent，中文友好。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">✍️ 写作</span>
+        <span class="tag tag-persona">🌐 中文</span>
+        <span class="tag tag-category">视频</span>
+      </div>
+    </a>
+
+    <a class="skill-card writing" href="https://github.com/PenglongHuang/chinese-novelist-skill" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">chinese-novelist-skill</span>
+        <span class="skill-stars">⭐ 900</span>
+      </div>
+      <div class="skill-desc">AI 中文小说创作，支持多章节和悬念节奏。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">✍️ 写作</span>
+        <span class="tag tag-persona">🌐 中文</span>
+        <span class="tag tag-category">小说</span>
+      </div>
+    </a>
+
+    <a class="skill-card writing" href="https://github.com/wshuyi/x-article-publisher-skill" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">x-article-publisher</span>
+        <span class="skill-stars">⭐ 700</span>
+      </div>
+      <div class="skill-desc">Markdown 一键发布到 X (Twitter) Articles。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">✍️ 写作</span>
+        <span class="tag tag-persona">📈 营销</span>
+        <span class="tag tag-category">发布</span>
+      </div>
+    </a>
+
+    <a class="skill-card writing" href="https://github.com/deusyu/translate-book" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">translate-book</span>
+        <span class="skill-stars">⭐ 584</span>
+      </div>
+      <div class="skill-desc">并行子 Agent 翻译整本书（PDF/DOCX/EPUB）。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">✍️ 写作</span>
+        <span class="tag tag-persona">🌐 中文</span>
+        <span class="tag tag-category">翻译</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ BUSINESS ═══════ -->
+  <div class="category-section active" data-cat="business">
+    <div class="section-title">
+      <div class="icon" style="background:#FCE7F3">💼</div>
+      <h2>产品 & 商务</h2>
+      <span class="count">3 个</span>
+    </div>
+
+    <a class="skill-card business" href="https://github.com/slavingia/skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">skills (slavingia)</span>
+        <span class="skill-stars">⭐ 6.1k</span>
+      </div>
+      <div class="skill-desc">Gumroad 创始人基于《极简创业》的 Skills。实战经验结晶。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">💼 商务</span>
+        <span class="tag tag-category">创业</span>
+      </div>
+    </a>
+
+    <a class="skill-card business" href="https://github.com/tradermonty/claude-trading-skills" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">claude-trading-skills</span>
+        <span class="skill-stars">⭐ 601</span>
+      </div>
+      <div class="skill-desc">股票投资：市场分析、技术图表、策略回测。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">💼 商务</span>
+        <span class="tag tag-category">金融</span>
+      </div>
+    </a>
+
+    <a class="skill-card business" href="https://github.com/aakashg/pm-claude-code-setup" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">pm-claude-code-setup</span>
+        <span class="skill-stars">⭐ 81</span>
+      </div>
+      <div class="skill-desc">产品经理专用配置，即开即用。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">💼 商务</span>
+        <span class="tag tag-category">产品管理</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ DESIGN ═══════ -->
+  <div class="category-section active" data-cat="design">
+    <div class="section-title">
+      <div class="icon" style="background:#FCE7F3">🎨</div>
+      <h2>设计 & 可视化</h2>
+      <span class="count">3 个</span>
+    </div>
+
+    <a class="skill-card design" href="https://github.com/yctimlin/mcp_excalidraw" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">mcp_excalidraw</span>
+        <span class="skill-stars">⭐ 1.6k</span>
+      </div>
+      <div class="skill-desc">Excalidraw 集成：AI 创建、编辑、导出手绘图表。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🎨 设计</span>
+        <span class="tag tag-category">图表</span>
+      </div>
+    </a>
+
+    <a class="skill-card design" href="https://github.com/huangserva/skill-prompt-generator" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">skill-prompt-generator</span>
+        <span class="skill-stars">⭐ 1.2k</span>
+      </div>
+      <div class="skill-desc">AI 肖像提示词生成系统，带自学习。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🎨 设计</span>
+        <span class="tag tag-category">AI 绘画</span>
+      </div>
+    </a>
+
+    <a class="skill-card design" href="https://github.com/dominikmartn/nothing-design-skill" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">nothing-design-skill</span>
+        <span class="skill-stars">⭐ 798</span>
+      </div>
+      <div class="skill-desc">Nothing 品牌极简设计语言：单色、工业感。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🎨 设计</span>
+        <span class="tag tag-category">UI 风格</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ MCP ═══════ -->
+  <div class="category-section active" data-cat="mcp">
+    <div class="section-title">
+      <div class="icon" style="background:#CCFBF1">🔌</div>
+      <h2>热门 MCP 服务器</h2>
+      <span class="count">12 个</span>
+    </div>
+
+    <a class="skill-card mcp" href="https://github.com/microsoft/playwright-mcp" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">playwright-mcp (Microsoft)</span>
+        <span class="skill-stars">⭐ 30k</span>
+      </div>
+      <div class="skill-desc">微软官方 Playwright MCP 服务器。浏览器自动化。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">浏览器</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/github/github-mcp-server" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">github-mcp-server</span>
+        <span class="skill-stars">⭐ 28k</span>
+      </div>
+      <div class="skill-desc">GitHub 官方 MCP。PR、Issues、代码搜索一站式。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-category">GitHub</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/PrefectHQ/fastmcp" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">fastmcp</span>
+        <span class="skill-stars">⭐ 24k</span>
+      </div>
+      <div class="skill-desc">快速构建 MCP 服务器的 Python 框架。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🐍 Python</span>
+        <span class="tag tag-category">框架</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/GLips/Figma-Context-MCP" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">Figma-Context-MCP</span>
+        <span class="skill-stars">⭐ 14k</span>
+      </div>
+      <div class="skill-desc">Figma 设计稿信息 → AI 编码。设计走查神器。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🎨 设计</span>
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">Figma</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/BeehiveInnovations/pal-mcp-server" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">pal-mcp-server</span>
+        <span class="skill-stars">⭐ 11k</span>
+      </div>
+      <div class="skill-desc">多模型协作：Gemini + OpenAI + Claude 联合工作。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">多模型</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/awslabs/mcp" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">mcp (AWS)</span>
+        <span class="skill-stars">⭐ 8.7k</span>
+      </div>
+      <div class="skill-desc">AWS 官方 MCP 服务器。云服务集成。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">AWS</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/LaurieWired/GhidraMCP" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">GhidraMCP</span>
+        <span class="skill-stars">⭐ 8.1k</span>
+      </div>
+      <div class="skill-desc">Ghidra 逆向工程 MCP 服务器。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔐 安全</span>
+        <span class="tag tag-category">逆向</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/idosal/git-mcp" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">git-mcp</span>
+        <span class="skill-stars">⭐ 7.9k</span>
+      </div>
+      <div class="skill-desc">消除代码幻觉的免费远程 MCP。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🌟 必备</span>
+        <span class="tag tag-category">Git</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/firecrawl/firecrawl-mcp-server" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">firecrawl-mcp</span>
+        <span class="skill-stars">⭐ 5.9k</span>
+      </div>
+      <div class="skill-desc">网页抓取和搜索 MCP。数据采集利器。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🔬 研究</span>
+        <span class="tag tag-category">爬虫</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/wonderwhy-er/DesktopCommanderMCP" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">DesktopCommanderMCP</span>
+        <span class="skill-stars">⭐ 5.8k</span>
+      </div>
+      <div class="skill-desc">终端控制、文件搜索、差异编辑。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">桌面控制</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/getsentry/XcodeBuildMCP" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">XcodeBuildMCP (Sentry)</span>
+        <span class="skill-stars">⭐ 5k</span>
+      </div>
+      <div class="skill-desc">iOS/macOS 项目构建 MCP。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🍎 Apple</span>
+        <span class="tag tag-category">Xcode</span>
+      </div>
+    </a>
+
+    <a class="skill-card mcp" href="https://github.com/21st-dev/magic-mcp" target="_blank">
+      <div class="skill-header">
+        <span class="skill-name">magic-mcp</span>
+        <span class="skill-stars">⭐ 4.6k</span>
+      </div>
+      <div class="skill-desc">像 v0 一样在 IDE 里生成前端组件。</div>
+      <div class="skill-tags">
+        <span class="tag tag-persona">🎨 设计</span>
+        <span class="tag tag-persona">🧑‍💻 开发</span>
+        <span class="tag tag-category">前端</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ ROADMAP ═══════ -->
+  <div class="roadmap">
+    <h2>🗺️ 新手路线图</h2>
+    <div class="roadmap-steps">
+      <div class="roadmap-step">
+        <div class="step-dot">1</div>
+        <div class="step-text">安装 Claude Code<small>npm install -g @anthropic-ai/claude-code</small></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-dot">2</div>
+        <div class="step-text">选装一个合集<small>推荐 gstack 或 antigravity</small></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-dot">3</div>
+        <div class="step-text">按你的角色选 2~3 个专项 Skills<small>参考上方分类</small></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-dot">4</div>
+        <div class="step-text">配置常用 MCP 服务器<small>GitHub + Playwright 推荐</small></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-dot">5</div>
+        <div class="step-text">学习 Hooks，定制工作流<small>你已经是高手了！🚀</small></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<div class="footer">
+  <p>Made with ❤️ for the Claude Code community</p>
+  <p>数据更新于 2026 年 4 月 · <a href="https://github.com" target="_blank">GitHub</a></p>
+</div>
+
+<script>
+  function showAll() {
+    document.querySelectorAll('.category-section').forEach(s => s.classList.add('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.nav-btn').classList.add('active');
+  }
+
+  function showCategory(cat) {
+    const sections = document.querySelectorAll('.category-section');
+    sections.forEach(s => {
+      if (s.dataset.cat === cat) {
+        s.classList.add('active');
+      } else {
+        s.classList.remove('active');
+      }
+    });
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
