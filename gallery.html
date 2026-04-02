@@ -313,6 +313,62 @@
   }
   .tag-persona { background: var(--pink-light); color: var(--pink); }
   .tag-category { background: var(--blue-light); color: var(--blue); }
+  .tag-growth { background: var(--red-light); color: var(--red); }
+  .tag-date { background: #F3F4F6; color: #6B7280; }
+  .tag-preinstalled { background: var(--green-light); color: var(--green); font-weight: 600; }
+
+  /* ═══════ DIR STRUCTURE ═══════ */
+  .dir-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .dir-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+  .dir-tree {
+    background: #1E1E2E;
+    color: #CDD6F4;
+    border-radius: 12px;
+    padding: 18px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .dir-tree .folder { color: #89B4FA; }
+  .dir-tree .file { color: #A6E3A1; }
+  .dir-tree .comment { color: #6C7086; }
+
+  /* ═══════ PREINSTALLED ═══════ */
+  .preinstalled-card {
+    background: linear-gradient(135deg, #D1FAE5 0%, #DBEAFE 100%);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .preinstalled-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+  .preinstalled-item {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .preinstalled-item .cmd {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--purple);
+    font-weight: 600;
+  }
+  .preinstalled-item .desc {
+    font-size: 0.82rem;
+    color: var(--text-light);
+  }
 
   /* ═══════ ROADMAP ═══════ */
   .roadmap {
@@ -434,6 +490,63 @@
     </div>
   </div>
 
+  <!-- ═══════ DIR STRUCTURE ═══════ -->
+  <div class="section-title" style="margin-top:8px">
+    <div class="icon" style="background:var(--purple-light)">📁</div>
+    <h2>Claude 项目目录结构</h2>
+  </div>
+
+  <div class="dir-card">
+    <h3>项目级 .claude/ 目录</h3>
+    <div class="dir-tree"><span class="folder">your-project/</span>
+├── <span class="file">CLAUDE.md</span>              <span class="comment"># 📋 项目指令，每次会话自动加载</span>
+├── <span class="file">.mcp.json</span>              <span class="comment"># 🔌 MCP 服务器配置</span>
+├── <span class="folder">.claude/</span>
+│   ├── <span class="file">settings.json</span>      <span class="comment"># ⚙️ 团队共享设置</span>
+│   ├── <span class="file">settings.local.json</span> <span class="comment"># 🔒 个人覆盖（gitignore）</span>
+│   ├── <span class="folder">commands/</span>          <span class="comment"># 📝 /slash-命令（.md）</span>
+│   ├── <span class="folder">skills/</span>            <span class="comment"># 🎯 完整 Skill 包</span>
+│   │   └── <span class="folder">&lt;name&gt;/</span>
+│   │       ├── <span class="file">SKILL.md</span>   <span class="comment"># 入口 + YAML frontmatter</span>
+│   │       ├── <span class="folder">scripts/</span>   <span class="comment"># 可选脚本</span>
+│   │       └── <span class="folder">references/</span> <span class="comment"># 可选文档</span>
+│   ├── <span class="folder">agents/</span>            <span class="comment"># 🤖 子 Agent 定义</span>
+│   ├── <span class="folder">rules/</span>             <span class="comment"># 📏 规则（可路径限定）</span>
+│   └── <span class="folder">agent-memory/</span>      <span class="comment"># 🧠 Agent 持久化记忆</span></div>
+  </div>
+
+  <div class="dir-card">
+    <h3>全局配置 ~/.claude/</h3>
+    <div class="dir-tree"><span class="folder">~/.claude/</span>
+├── <span class="file">CLAUDE.md</span>              <span class="comment"># 🌍 全局指令（所有项目生效）</span>
+├── <span class="file">settings.json</span>          <span class="comment"># ⚙️ 默认设置</span>
+├── <span class="file">keybindings.json</span>       <span class="comment"># ⌨️ 自定义快捷键</span>
+├── <span class="folder">commands/</span>              <span class="comment"># 📝 全局命令</span>
+├── <span class="folder">skills/</span>                <span class="comment"># 🎯 全局 Skills</span>
+├── <span class="folder">agents/</span>                <span class="comment"># 🤖 全局子 Agent</span>
+├── <span class="folder">rules/</span>                 <span class="comment"># 📏 全局规则</span>
+└── <span class="folder">projects/</span>              <span class="comment"># 🧠 Auto Memory</span>
+    └── <span class="folder">&lt;project&gt;/memory/</span>
+        └── <span class="file">MEMORY.md</span></div>
+  </div>
+
+  <!-- ═══════ PREINSTALLED SKILLS ═══════ -->
+  <div class="preinstalled-card">
+    <h3>📦 本仓库预装 Skills（克隆即用）</h3>
+    <div class="preinstalled-item">
+      <span class="cmd">/humanizer</span>
+      <span class="desc">去除 AI 写作痕迹 · 12k ⭐</span>
+    </div>
+    <div class="preinstalled-item">
+      <span class="cmd">/plan-with-files</span>
+      <span class="desc">Manus 风格持久化规划 · 18k ⭐</span>
+    </div>
+    <div class="preinstalled-item">
+      <span class="cmd">/prompt-master</span>
+      <span class="desc">AI 精准提示词生成 · 4.4k ⭐</span>
+    </div>
+  </div>
+
   <!-- ═══════ PERSONA ═══════ -->
   <div class="persona-section">
     <div class="persona-grid">
@@ -469,7 +582,8 @@
       <div class="skill-tags">
         <span class="tag tag-persona">🌟 必备</span>
         <span class="tag tag-persona">🧑‍💻 开发</span>
-        <span class="tag tag-category">框架</span>
+        <span class="tag tag-growth">🔥 1775/天</span>
+        <span class="tag tag-date">2026-01</span>
       </div>
     </a>
 
@@ -482,7 +596,8 @@
       <div class="skill-tags">
         <span class="tag tag-persona">🌟 必备</span>
         <span class="tag tag-persona">💼 商务</span>
-        <span class="tag tag-category">配置</span>
+        <span class="tag tag-growth">🔥 2689/天</span>
+        <span class="tag tag-date">2026-03</span>
       </div>
     </a>
 
@@ -494,7 +609,8 @@
       <div class="skill-desc">1340+ 可安装 Skills，自带 CLI 安装器。npx antigravity install 一条命令搞定。</div>
       <div class="skill-tags">
         <span class="tag tag-persona">🌟 必备</span>
-        <span class="tag tag-category">安装器</span>
+        <span class="tag tag-growth">🔥 380/天</span>
+        <span class="tag tag-date">2026-01</span>
       </div>
     </a>
 
@@ -506,8 +622,9 @@
       <div class="skill-desc">Manus 风格持久化规划系统。用文件管理项目规划，思考过程可追溯、可编辑。</div>
       <div class="skill-tags">
         <span class="tag tag-persona">🌟 必备</span>
-        <span class="tag tag-persona">🧑‍💻 开发</span>
-        <span class="tag tag-category">规划</span>
+        <span class="tag tag-preinstalled">📦 已预装</span>
+        <span class="tag tag-growth">🔥 199/天</span>
+        <span class="tag tag-date">2026-01</span>
       </div>
     </a>
 
@@ -519,8 +636,9 @@
       <div class="skill-desc">去除 AI 写作痕迹，让文本更自然。任何输出文本的场景都能用。</div>
       <div class="skill-tags">
         <span class="tag tag-persona">🌟 必备</span>
-        <span class="tag tag-persona">✍️ 写作</span>
-        <span class="tag tag-category">文本处理</span>
+        <span class="tag tag-preinstalled">📦 已预装</span>
+        <span class="tag tag-growth">🔥 161/天</span>
+        <span class="tag tag-date">2026-01</span>
       </div>
     </a>
 
@@ -532,7 +650,9 @@
       <div class="skill-desc">为任何 AI 工具生成精准提示词，带上下文和记忆保持。提高 AI 交互效率的元技能。</div>
       <div class="skill-tags">
         <span class="tag tag-persona">🌟 必备</span>
-        <span class="tag tag-category">提示工程</span>
+        <span class="tag tag-preinstalled">📦 已预装</span>
+        <span class="tag tag-growth">🔥 191/天</span>
+        <span class="tag tag-date">2026-03</span>
       </div>
     </a>
 
@@ -545,6 +665,7 @@
       <div class="skill-tags">
         <span class="tag tag-persona">🌟 必备</span>
         <span class="tag tag-category">教程</span>
+        <span class="tag tag-date">2025-06</span>
       </div>
     </a>
   </div>
