@@ -2,3 +2,7 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
+
+# 小红书发布工具（本地使用，不上传）
+xhs-post/
+
